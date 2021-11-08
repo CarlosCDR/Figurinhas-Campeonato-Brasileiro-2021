@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PosicaoController;
+use App\Http\Controllers\ClubesController;
+use App\Http\Controllers\JogadoresController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,7 +15,9 @@ use App\Http\Controllers\PosicaoController;
 |
 */
 Route::resources([
-	"posicao" => PosicaoController::Class
+	"posicao" => PosicaoController::Class,
+	"clube" => ClubesController::Class,
+	"jogador" => JogadoresController::Class
 ]);
 Route::get('/', function () {
     return view('futebol-figurinha-2021.index.index');

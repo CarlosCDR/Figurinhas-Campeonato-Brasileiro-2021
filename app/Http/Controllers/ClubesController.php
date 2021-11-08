@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Clube;
+use App\Models\Imagem;
 class ClubesController extends Controller
 {
     /**
@@ -13,7 +14,15 @@ class ClubesController extends Controller
      */
     public function index()
     {
-        //
+        $clube = new Clube();
+		$clubes = Clube::All();
+		return view(
+			"futebol-figurinha-2021.clube.clube",
+			[
+				"clube" => $clube,
+				"clubes" => $clubes
+			]
+		);
     }
 
     /**
@@ -34,7 +43,15 @@ class ClubesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->get('id')!=""){
+			$clube = Clube::Find($request->get('id'));
+		}else{
+			$clube = new Clube;
+		}
+		$clube->nome_clube = $request->get("nome_clube");
+		$clube->save();
+		$request>session()->flash("status", "salvo");
+		return redirect("/clube");
     }
 
     /**
@@ -56,7 +73,15 @@ class ClubesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $clube = Clube::Find($id);
+		$clubes = Clube::All();
+		return view(
+			"futebol-figurinha-2021.clube.clube",
+			[
+				"clube" => $clube,
+				"clubes" => $clubes
+			]
+		);
     }
 
     /**
@@ -77,8 +102,10 @@ class ClubesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        Clube::Destroy($id);
+		$request>session()->flash("status", "excluido");
+		return Redirect("/clube");
     }
 }
