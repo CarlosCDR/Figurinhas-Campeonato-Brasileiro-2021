@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Clube;
-use App\Models\Imagem;
 
-use Illuminate\Support\Facades\DB;
-class ClubesController extends Controller
+class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,17 +13,7 @@ class ClubesController extends Controller
      */
     public function index()
     {
-        $clube = new Clube();
-		$clubes = Clube::All();
-		$compare = DB::table("clube AS c")->join("imagem AS i","i.clube", "=","c.id")->select("c.id","i.url AS url")->get();
-		return view(
-			"futebol-figurinha-2021.clube.clube",
-			[
-				"clube" => $clube,
-				"clubes" => $clubes,
-				"compare" => $compare
-			]
-		);
+        return view ("futebol-figurinha-2021.home.index");
     }
 
     /**
@@ -47,15 +34,7 @@ class ClubesController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->get('id')!=""){
-			$clube = Clube::Find($request->get('id'));
-		}else{
-			$clube = new Clube;
-		}
-		$clube->nome_clube = $request->get("nome_clube");
-		$clube->save();
-		$request>session()->flash("status", "salvo");
-		return redirect("/clube");
+        //
     }
 
     /**
@@ -77,18 +56,7 @@ class ClubesController extends Controller
      */
     public function edit($id)
     {
-        $clube = Clube::Find($id);
-		$clubes = Clube::All();
-		$compare = DB::table("clube AS c")->join("imagem AS i","i.clube", "=","c.id")->select("c.id","i.url AS url")->get();
-		
-		return view(
-			"futebol-figurinha-2021.clube.clube",
-			[
-				"clube" => $clube,
-				"clubes" => $clubes,
-				"compare" => $compare
-			]
-		);
+        //
     }
 
     /**
@@ -109,11 +77,8 @@ class ClubesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
-		
-        Clube::Destroy($id);
-		$request>session()->flash("status", "excluido");
-		return Redirect("/clube");
+        //
     }
 }

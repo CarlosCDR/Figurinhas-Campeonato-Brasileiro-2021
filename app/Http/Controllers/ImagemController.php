@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Clube;
 use App\Models\Imagem;
-
-use Illuminate\Support\Facades\DB;
-class ClubesController extends Controller
+use Illuminate\Support\Facades\Storage;
+class ImagemController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,17 +14,7 @@ class ClubesController extends Controller
      */
     public function index()
     {
-        $clube = new Clube();
-		$clubes = Clube::All();
-		$compare = DB::table("clube AS c")->join("imagem AS i","i.clube", "=","c.id")->select("c.id","i.url AS url")->get();
-		return view(
-			"futebol-figurinha-2021.clube.clube",
-			[
-				"clube" => $clube,
-				"clubes" => $clubes,
-				"compare" => $compare
-			]
-		);
+        //
     }
 
     /**
@@ -47,15 +35,14 @@ class ClubesController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->get('id')!=""){
-			$clube = Clube::Find($request->get('id'));
-		}else{
-			$clube = new Clube;
-		}
-		$clube->nome_clube = $request->get("nome_clube");
-		$clube->save();
-		$request>session()->flash("status", "salvo");
-		return redirect("/clube");
+        $imagem = new Imagem();//
+		$imagem->clube = $request->get("clube");
+		$url = $request->file("url")->store("public/clube");
+		$url = str_replace("public/","storage/",$url);
+		$imagem->url = $url;
+		$imagem->save();
+		$request->session()->flash("status", "salvo");
+		return redirect("/imagem/".$request->get("clube"));
     }
 
     /**
@@ -66,7 +53,9 @@ class ClubesController extends Controller
      */
     public function show($id)
     {
-        //
+		$imagens = Imagem::Where("clube", "=", $id)->get();
+        return view(
+					"futebol-figurinha-2021.imagem.img", ["clube" => $id, "imagens" => $imagens]);
     }
 
     /**
@@ -77,18 +66,7 @@ class ClubesController extends Controller
      */
     public function edit($id)
     {
-        $clube = Clube::Find($id);
-		$clubes = Clube::All();
-		$compare = DB::table("clube AS c")->join("imagem AS i","i.clube", "=","c.id")->select("c.id","i.url AS url")->get();
-		
-		return view(
-			"futebol-figurinha-2021.clube.clube",
-			[
-				"clube" => $clube,
-				"clubes" => $clubes,
-				"compare" => $compare
-			]
-		);
+        //
     }
 
     /**
@@ -111,9 +89,13 @@ class ClubesController extends Controller
      */
     public function destroy($id, Request $request)
     {
-		
-        Clube::Destroy($id);
-		$request>session()->flash("status", "excluido");
-		return Redirect("/clube");
+        $imagem = Imagem::Find($id);
+		$url = $imagem->url;
+		$clube = $imagem->clube;
+		$imagem->delete();
+		$url = str_replace("storage/","public/",$url);
+		Storage::delete($url);
+		$request->session()->flash("status", "excluido");
+		return redirect("/imagem/".$clube);
     }
 }

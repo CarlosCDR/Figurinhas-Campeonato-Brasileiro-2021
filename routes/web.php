@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PosicaoController;
 use App\Http\Controllers\ClubesController;
 use App\Http\Controllers\JogadoresController;
+use App\Http\Controllers\ImagemController;
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +19,10 @@ use App\Http\Controllers\JogadoresController;
 Route::resources([
 	"posicao" => PosicaoController::Class,
 	"clube" => ClubesController::Class,
-	"jogador" => JogadoresController::Class
+	"jogador" => JogadoresController::Class,
+	"imagem" => ImagemController::Class,
+	"home" => HomeController::Class
 ]);
 Route::get('/', function () {
-    return view('futebol-figurinha-2021.index.index');
+    return view('futebol-figurinha-2021.home.index');
 });
