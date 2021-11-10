@@ -17,14 +17,14 @@ class JogadoresController extends Controller
      */
     public function index()
     {
-        $jogador = new Jogador();
-		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao", "j.id")->get();
+        $jogado = new Jogador();
+		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao AS colecao", "j.id")->get();
 		$posicoes = Posicao::All();
 		$clubes = Clube::All();
 		return view(
 			"futebol-figurinha-2021.jogador.jogador",
 			[
-				"jogador" => $jogador,
+				"jogado" => $jogado,
 				"jogadores" => $jogadores,
 				"posicoes" => $posicoes,
 				"clubes" => $clubes
@@ -55,20 +55,26 @@ class JogadoresController extends Controller
 			$acao = "salvo";
 		}else{
 			$jogador = Jogador::Find($request->get("id"));
-			$acao = "editado";
+			$acao = "atualizado";
 		}
-		$jogador->nome_jogador = $request->get("nome_jogador");
-		$jogador->data_nascimento  = $request->get("data_nascimento");
-		$jogador->posicao = $request->get("posicao");
-		$jogador->clube = $request->get("clube");
-		$col = $request->get("ehColecao");
-		
-		if($col == "" || $col == "N"){
-			$col = "N";
+		if($request->get("acao") != "att_colecao"){
+			$jogador->nome_jogador = $request->get("nome_jogador");
+			$jogador->data_nascimento  = $request->get("data_nascimento");
+			$jogador->posicao = $request->get("posicao");
+			$jogador->clube = $request->get("clube");
+			$col = $request->get("ehColecao");
+			
+			if($col == "" || $col == "N"){
+				$col = "N";
+			}
+			$jogador->ehColecao  = $col;
+		}else{
+			$jogador = Jogador::Find($request->get("id"));
+			$jogador->ehColecao = "S"; 
+			$acao = "adicionado";	
 		}
-		$jogador->ehColecao  = $col;
 		$jogador->save();
-        $request->Session()->flash("acao", $acao);
+        $request->Session()->flash("status", $acao);
 		return redirect("/jogador");
 	
     }
@@ -93,14 +99,15 @@ class JogadoresController extends Controller
     public function edit($id)
     {
         new Jogador();
-		$jogador = Jogador::Find($id);
-		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao", "j.id")->get();
+		$jogado = Jogador::Find($id);
+		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao AS colecao", "j.id")->get();
 		$posicoes = Posicao::All();
 		$clubes = Clube::All();
+		//dd($jogado);
 		return view(
 			"futebol-figurinha-2021.jogador.jogador",
 			[
-				"jogador" => $jogador,
+				"jogado" => $jogado,
 				"jogadores" => $jogadores,
 				"posicoes" => $posicoes,
 				"clubes" => $clubes
@@ -117,7 +124,7 @@ class JogadoresController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
@@ -129,7 +136,7 @@ class JogadoresController extends Controller
     public function destroy($id,Request $request)
     {
         Jogador::Destroy($id);
-        $request->Session()->flash("acao", "excluido");
+        $request->Session()->flash("status", "excluido");
 		return redirect("/jogador");
     }
 }

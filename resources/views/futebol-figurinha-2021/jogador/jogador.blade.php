@@ -5,17 +5,17 @@
 		<form class = "row-2"action = "/jogador" method = "post">
 			<div>
 				<label for  = "campoNome">Nome do jogador</label>
-				<input type = "text" id = "campoNome" name = "nome_jogador" value = "{{$jogador->nome_jogador}}"/>
+				<input type = "text" id = "campoNome" name = "nome_jogador" value = "{{$jogado->nome_jogador}}"/>
 			</div>
 			<div>
 				<label for  = "campoData">Data de nascimento</label>
-				<input type = "date" id = "campoData" name = "data_nascimento" value = "{{$jogador->data_nascimento}}"/>
+				<input type = "date" id = "campoData" name = "data_nascimento" value = "{{$jogado->data_nascimento}}"/>
 			</div>
 			<div>
 				<label>Clube</label>
 				<select id = "selecaoClube" name = "clube" >
 					@foreach($clubes as $clube)	
-						@if($jogador->clube == $clube->id)
+						@if($jogado->clube == $clube->id)
 							<option value = "{{$clube->id}}" selected = "selected">{{$clube->nome_clube}}</option>
 						@else
 							<option value = "{{$clube->id}}" >{{$clube->nome_clube}}</option>
@@ -27,7 +27,7 @@
 				<label>Posicao</label>
 				<select id = "selecaoPosicao" name = "posicao" >
 					@foreach($posicoes as $posicao)	
-						@if($jogador->posicao == $posicao->id)
+						@if($jogado->posicao == $posicao->id)
 							<option value = "{{$posicao->id}}" selected = "selected">{{$posicao->pos}}</option>
 						@else
 							<option value = "{{$posicao->id}}" >{{$posicao->pos}}</option>
@@ -37,10 +37,13 @@
 			</div>
 			<div>
 				<input type = "submit" value  = "Salvar"/>
+				<input type = "hidden" name = 'id' value = "{{$jogado->id}}"/>
+				<input type = "text" name = 'ehColecao' value = "{{$jogado->ehColecao}}"/>
+				<button class="btn bg-gradient-info" type="button" onclick="location.href='/jogador';">Novo</button>
+			
 			</div>	
 			@csrf
-			<input type = "hidden" name = 'id' value = "{{$jogador->id}}"/>
-			<input type = "hidden" name = 'ehColecao' value = "{{$jogador->ehColecao}}"/>
+			
 		</form>
 	</div>
 @endsection
@@ -62,7 +65,20 @@
 				<td>{{$jogador->data_nascimento}}</td>
 				<td>{{$jogador->posicao}}</td>
 				<td>{{$jogador->clube}}</td>
-				<td>{{$jogador->ehColecao}}</td>
+				@if($jogador->colecao == "N")
+					<td>
+						<form method = "POST" action = "/jogador">
+							<input type = "hidden" name = "id" value = "{{$jogador->id}}"/> 
+							<input type = "hidden" name = "confirma" value = "S"/>
+							<input type = "hidden" name = "acao" value = "att_colecao"/>
+							
+							<a onclick="this.closest('form').submit();return false;"><img src = "{{asset('img/botao-adicionar.png');}}" width = "25px"/></a>
+							@csrf
+						</form>
+					</td>
+				@else
+					<td><img src = "{{asset('img/confirmado.png');}}" width = "25px"/></td>
+				@endif
 				<td><a href = "/jogador/{{$jogador->id}}/edit">Editar</a><td/>
 				<td>
 					<form method = "POST" action = "/jogador/{{$jogador->id}}">
