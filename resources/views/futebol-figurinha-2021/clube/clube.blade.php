@@ -1,5 +1,5 @@
 @extends ("futebol-figurinha-2021.template")
-@section("titulo", "Times")
+@section("titulo", "Clubes")
 @section("cadastro")
    <div class="p-3 mb-2 bg-success text-dark">
     <form method="POST" action="/clube">
