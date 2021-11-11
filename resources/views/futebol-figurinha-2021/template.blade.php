@@ -53,6 +53,13 @@
 		</div>
 		@endif
 		
+		
+		@if(Session::get("status") == "erro_data")
+		<div class = "alert alert-error" role = "alert"> 
+			<strongs>A data é invalida. Verifique a sua data de nascimento</strongs>
+		</div>
+		@endif
+		
 		@yield("cadastro")
 		@yield("listagem")
 	</body>

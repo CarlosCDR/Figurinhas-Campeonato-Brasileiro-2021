@@ -49,32 +49,49 @@ class JogadoresController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        if($request->get("id")== ""){
-			$jogador = new Jogador();
-			$acao = "salvo";
+    {	
+		$notData = false;
+		if(!empty($request->get("data_nascimento"))){
+			$dtn = $request->get("data_nascimento");
+			$partes = explode('-',$dtn);
+			$anoNasc = $partes[0];
+			$ano = date('Y');
 		}else{
-			$jogador = Jogador::Find($request->get("id"));
-			$acao = "atualizado";
+			$notData = true;
 		}
-		if($request->get("acao") != "att_colecao"){
-			$jogador->nome_jogador = $request->get("nome_jogador");
-			$jogador->data_nascimento  = $request->get("data_nascimento");
-			$jogador->posicao = $request->get("posicao");
-			$jogador->clube = $request->get("clube");
-			$col = $request->get("ehColecao");
-			
-			if($col == "" || $col == "N"){
-				$col = "N";
+		if($request->get("acao") != "att_colecao"){		
+			if($notData == false){
+				if($request->get("id")== ""){
+					$jogador = new Jogador();
+					$acao = "salvo";
+				}else{
+					$jogador = Jogador::Find($request->get("id"));
+					$acao = "atualizado";
+				}
+				if($anoNasc <= $ano){
+					$jogador->nome_jogador = $request->get("nome_jogador");
+					$jogador->data_nascimento  = $request->get("data_nascimento");
+					$jogador->posicao = $request->get("posicao");
+					$jogador->clube = $request->get("clube");
+					$col = $request->get("ehColecao");
+					if($col == "" || $col == "N"){
+						$col = "N";
+					}
+					$jogador->ehColecao  = $col;
+					$jogador->save();
+				}else{
+					$acao = "erro_data";
+				}
+			}else{
+				$acao = "erro_data";
 			}
-			$jogador->ehColecao  = $col;
 		}else{
 			$jogador = Jogador::Find($request->get("id"));
 			$jogador->ehColecao = "S"; 
-			$acao = "adicionado";	
+			$acao = "adicionado";
+			$jogador->save();			
 		}
-		$jogador->save();
-        $request->Session()->flash("status", $acao);
+	    $request->Session()->flash("status", $acao);
 		return redirect("/jogador");
 	
     }

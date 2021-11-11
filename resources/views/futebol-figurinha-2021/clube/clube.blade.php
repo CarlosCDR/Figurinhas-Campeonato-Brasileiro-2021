@@ -1,27 +1,28 @@
 @extends ("futebol-figurinha-2021.template")
 @section("titulo", "Times")
 @section("cadastro")
-	<div class = "conteiner col-2">
-		<form class = "row-2"action = "/clube" method = "post">
-			
-			<input type = "hidden" name = 'id' value = "{{$clube->id}}"/>
-			<div>
-				<label for  = "campoNome">Nome do clube</label>
-				<input type = "text" id = "campoNome" name = "nome_clube" value = "{{$clube->nome_clube}}"/>
-			</div>	
-			<div>
-				<input type = "submit" value  = "Salvar"/>
-			</div>	
-			@csrf
-		</form>
-	</div>
+   <div class="p-3 mb-2 bg-success text-dark">
+    <form method="POST" action="/clube">
+        <div class="form-row" >
+            <div class="form-group col-md-6">
+                <label for="campoNome">Nome do clube</label>
+                <input type="text" id="campoPos" name="nome_clube"  class="form-control"  value = "{{$clube->nome_clube}}" required="required" />
+            </div>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <br>
+        @csrf
+        <input type = "hidden" name = 'id' value = "{{$clube->id}}"/>
+    </form>
+    <img src="{!! asset('img/img14.jpg') !!}" class="img-fluid" alt="Responsive image">
 @endsection
 @section("listagem")
-	<table>
-		<thead>
-			<th>Nome do clube</th>
-			<th> Escudo </th>
-			<th colspan = "2">Ações</th>
+	<table class="table">
+		<thead class="thead-dark">
+			<th scope="col">Nome do clube</th>
+			<th scope="col"> Escudo </th>
+			<th scope="col" colspan = "2">Ações</th>
 		</thead>
 		<tbody>
 			@foreach($clubes as $clube)
@@ -39,15 +40,15 @@
 						<td><img src = "{{asset($compara->url);}}" width = "100px"/></td>
 					<?php }else{ ?>
 						
-						<td><a href = "/imagem/{{$clube->id}}" class = "imagem">Adicionar escudo</a></td>
+						<td><a href = "/imagem/{{$clube->id}}" class = "btn btn-dark imagem" style="text-decoration:none">Adicionar escudo</a></td>
 					<?php }	?>
-					<td><a href = "/clube/{{$clube->id}}/edit" >Editar</a></td>
+					<td><a href = "/clube/{{$clube->id}}/edit" class="btn btn-dark" style="text-decoration:none">Editar</a></td>
 						
 					<td>
 						<form method = "POST" action = "/clube/{{$clube->id}}">
 							<input type = "hidden" name = "_method" value = "DELETE"/> 
 							@csrf
-							<input type = "submit" id = "excluirBotao" value = "Excluir"/>
+							<input type = "submit" id = "excluirBotao" class="btn btn-danger" value = "Excluir"/>
 						</form>
 					</td>
 				<tr>
