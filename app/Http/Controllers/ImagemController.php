@@ -55,7 +55,12 @@ class ImagemController extends Controller
     {
 		$imagens = Imagem::Where("clube", "=", $id)->get();
         return view(
-					"futebol-figurinha-2021.imagem.img", ["clube" => $id, "imagens" => $imagens]);
+					"futebol-figurinha-2021.imagem.img", 
+					[
+						"clube" => $id, 
+						"imagens" => $imagens,
+					]
+		);
     }
 
     /**

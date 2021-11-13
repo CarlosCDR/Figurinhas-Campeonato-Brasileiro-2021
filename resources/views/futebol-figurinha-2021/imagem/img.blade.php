@@ -5,9 +5,8 @@
 		<link rel="stylesheet" href="{{ asset('css/bootstrap.css')}}"/>
 		<link rel="stylesheet" href="{{ asset('css/magnific-popup.css')}}"/>
 	</head>
-	<body>
-		
-		<div class = "conteiner col-2">
+	<body class = " conteiner col-16 bg-secondary">
+		<div class="p-3 mb-2 bg-primary text-dark">	
 			@if(Session::get("status") == "salvo")
 			<div class = "alert alert-success" role = "alert">
 				<strongs>Salvo com sucesso</strongs>
@@ -28,17 +27,17 @@
 			
 			<form action = "/imagem" method = "post" enctype = "multipart/form-data">
 				<div>
-					<input type = "file" name = "url" class="form-control"/>
+					<input type = "file" name = "url" required="required" class="form-control"/>
 				</div>	
 				<div>
-					<input type = "submit" value  = "Salvar"/>
+					<input type = "submit" value  = "Salvar" class="btn btn-success mb-2 " />
 				</div>	
 				@csrf
 				<input type = "hidden" name = 'clube' value = "{{$clube}}"/>
 			</form>
 		</div>
-		<div class = "conteiner col-2">
-			<table>
+		<div class = "conteiner">
+			<table class="table">
 				<thead>
 					<th>Imagem</th>
 					<th colspan = "2">Exluir</th>

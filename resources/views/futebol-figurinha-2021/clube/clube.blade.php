@@ -2,11 +2,26 @@
 @section("titulo", "Clubes")
 @section("cadastro")
    <div class="p-3 mb-2 bg-success text-dark">
-    <form method="POST" action="/clube">
+    <form method="POST" action="/clube" enctype = "multipart/form-data">
         <div class="form-row" >
             <div class="form-group col-md-6">
                 <label for="campoNome">Nome do clube</label>
-                <input type="text" id="campoPos" name="nome_clube"  class="form-control"  value = "{{$clube->nome_clube}}" required="required" />
+                <input type="text" id="campoPos" required="required" name="nome_clube"  class="form-control"  value = "{{$clube->nome_clube}}" required="required" />
+				@if($habilita)
+					@foreach($compare as $compara)
+						@if($clube->id == $compara->id)
+							<?php $escudo = true; ?>
+							@break
+						@endif	
+				    @endforeach
+					<label for = "escudo">Escudo</label>
+					<img id = "escudo"src = "{{asset($compara->url);}}" width = "300px"/>
+				@else
+					<div>
+						<input type = "file" name = "url" required="required" class="form-control"/>
+					</div>
+				@endif	
+				
             </div>
         </div>
         <br>

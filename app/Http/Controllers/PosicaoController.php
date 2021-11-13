@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Posicao;
+use Illuminate\Support\Facades\DB;
 class PosicaoController extends Controller
 {
     /**
@@ -33,6 +34,28 @@ class PosicaoController extends Controller
     {
         //
     }
+	/*private function preCadastro(){
+		$existe = $jogadores = DB::table('posicao')->select("id")->count();
+		if($existe == 0){
+			$a = 0;
+			$array =[
+				"Goleiro" => "Defende o gol",
+				"Defensor" => "É um zagueiro",
+				"Lateral" => "Habita as laterais, pode ser defensivo ou ofencivo",
+				"Volante" => "Sei la",
+				"Meia" => "Fica no meio do campo?",
+				"Atacante" => "Faz o gol"
+			];
+			foreach ($array as $elemento){
+				$posicao = new Posicao;
+				$posicao->pos = $array->get("pos");
+				$posicao->descricao = $request->get("desc");
+				$posicao->save();
+				
+			}
+		}
+		
+	}*/
 
     /**
      * Store a newly created resource in storage.
@@ -53,6 +76,7 @@ class PosicaoController extends Controller
 		$request>session()->flash("status", "salvo");
 		return redirect("/posicao");
     }
+	
 
     /**
      * Display the specified resource.
@@ -104,8 +128,15 @@ class PosicaoController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        Posicao::Destroy($id);
-		$request>session()->flash("status", "excluido");
+        $posicao = Posicao::Find($id);
+		$jogadores = DB::table('jogador')->where("posicao", "=",$id)->count();
+		if($jogadores > 0){
+			$status = "erro_exc";
+		}else{
+			$posicao->delete();
+			$status = "excluido";
+		}
+		$request>session()->flash("status", $status);
 		return Redirect("/posicao");
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Jogador;
 use App\Models\Posicao;
 use App\Models\Clube;
+use App\Models\Imagem;
 use Illuminate\Support\Facades\DB;
 
 class JogadoresController extends Controller
@@ -17,17 +18,21 @@ class JogadoresController extends Controller
      */
     public function index()
     {
-        $jogado = new Jogador();
-		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao AS colecao", "j.id")->get();
+        $atleta = new Jogador();
+		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao AS colecao", "j.id","c.id AS idclube" )->get();
+		$escudos = DB::table("clube AS c")->join("imagem AS i","i.clube", "=","c.id")->select("i.clube","i.url AS url")->get();
 		$posicoes = Posicao::All();
 		$clubes = Clube::All();
+		$separado = "";
 		return view(
 			"futebol-figurinha-2021.jogador.jogador",
 			[
-				"jogado" => $jogado,
+				"atleta" => $atleta,
 				"jogadores" => $jogadores,
 				"posicoes" => $posicoes,
-				"clubes" => $clubes
+				"clubes" => $clubes,
+				"escudos" => $escudos,
+				"separado" => $separado
 			]
 		);
     }
@@ -74,8 +79,10 @@ class JogadoresController extends Controller
 					$jogador->posicao = $request->get("posicao");
 					$jogador->clube = $request->get("clube");
 					$col = $request->get("ehColecao");
-					if($col == "" || $col == "N"){
-						$col = "N";
+					if($col == "on"){
+						$col = "sim";
+					}else{
+						$col = "nao";
 					}
 					$jogador->ehColecao  = $col;
 					$jogador->save();
@@ -87,7 +94,7 @@ class JogadoresController extends Controller
 			}
 		}else{
 			$jogador = Jogador::Find($request->get("id"));
-			$jogador->ehColecao = "S"; 
+			$jogador->ehColecao = "sim"; 
 			$acao = "adicionado";
 			$jogador->save();			
 		}
@@ -116,18 +123,23 @@ class JogadoresController extends Controller
     public function edit($id)
     {
         new Jogador();
-		$jogado = Jogador::Find($id);
-		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao AS colecao", "j.id")->get();
+		$atleta = Jogador::Find($id);
+		$jogadores = DB::table("jogador AS j")->join("posicao AS p","j.posicao", "=","p.id")->join("clube AS c","j.clube", "=","c.id")->select("j.nome_jogador","j.data_nascimento","p.pos AS posicao", "c.nome_clube AS clube", "j.ehColecao AS colecao", "j.id","c.id AS idclube" )->get();
 		$posicoes = Posicao::All();
+		$escudos = DB::table("clube AS c")->join("imagem AS i","i.clube", "=","c.id")->select("i.clube","i.url AS url")->get();
 		$clubes = Clube::All();
+		$separado = $atleta->ehColecao;
+		//dd($separado);
 		//dd($jogado);
 		return view(
 			"futebol-figurinha-2021.jogador.jogador",
 			[
-				"jogado" => $jogado,
+				"atleta" => $atleta,
 				"jogadores" => $jogadores,
 				"posicoes" => $posicoes,
-				"clubes" => $clubes
+				"clubes" => $clubes,
+				"escudos" => $escudos,
+				"separado" => $separado
 			]
 		);
     }
