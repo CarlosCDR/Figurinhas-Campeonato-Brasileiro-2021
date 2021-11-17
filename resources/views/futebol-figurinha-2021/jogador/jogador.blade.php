@@ -41,7 +41,7 @@
 				
 			</div>
 			<div class="form-check">
-				@if($separado == "sim" || $atleta->ehColecao == "s")
+				@if($separado == "sim" || $atleta->ehcolecao == "sim")
 					<input type = "checkbox" class="form-check-input" id = "ehCol" name = "ehColecao" checked/>
 				@else
 					<input type = "checkbox"  class="form-check-input" id = "ehCol" name = "ehColecao" />

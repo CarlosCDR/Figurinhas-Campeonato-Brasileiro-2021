@@ -6,9 +6,6 @@
 		<link rel="stylesheet" href="{{ asset('css/magnific-popup.css')}}"/>
 	</head>
 	<body>
-		<div class = "card">
-			<h1><p>Em produção</p></h1>
-		</div>
 		 <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
 			<a class="navbar-brand" href="/home">Figurinhas</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
