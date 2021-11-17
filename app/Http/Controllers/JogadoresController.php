@@ -129,8 +129,17 @@ class JogadoresController extends Controller
 		$escudos = DB::table("clube AS c")->join("imagem AS i","i.clube", "=","c.id")->select("i.clube","i.url AS url")->get();
 		$clubes = Clube::All();
 		$separado = $atleta->ehColecao;
-		//dd($separado);
-		//dd($jogado);
+		/*
+			Professor, esta ocorrendo um problema no trabalho da minha equipe. Na tabela jogador eu tenho o campo ehColecao,  esse campo recebe "sim" se o jogador estiver na coleção 
+			ou não  se ele estiver fora. Blz, ate ai tudo bem, eu cadastro o jogador com um formulario onde uso o chek: se estiver marcado é sim, se desmarcado é não. 
+			Quando eu cadastro ele salva normalmente e corretamente os dados. O problema começa aqui, eu salvo um jogador como "adiquirido". Blz, ele atualiza no banco de dados, 
+			normal e correto. Porém quando eu clico em editar, ele "não consegue" atribuir o valor da coluna ehColecao. Parece que ele pega o valor, mas quando vou atribuir a outra 
+			variável ele atribui o valor nulo e não o original do banco. Quando tento "setar" esse valor em um campo do tipo text, por via de teste, ele mostra um campo em branco.
+			Usei um dd($atleta) para ver se todos os dados estavam sendo recuperados, e sim estão sendo recuperados, e só essa coluna esta com esse problema. Ja enfreitei esse problema
+			no Symfony e la tambem não consegui descobrir o problema (no symfony usamos o doctrine no lugar do eloquent).
+		*/
+		//dd($separado);//Usei para ver se o valor da coluna ehColecao estava sendo atribuido
+		//dd($atleta);//Usei para ver se o "jogador", no caso o atleta (mudei o nome para ver se estava ocorrendo algum conflito de variavel), estava recebendo os valores do banco, e sim esta
 		return view(
 			"futebol-figurinha-2021.jogador.jogador",
 			[
